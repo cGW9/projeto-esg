@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: esg_app
+    ports:
+      - "8080:8080"
+    networks:
+      - esg_network
+    restart: always
+
+  db:
+    image: postgres:15-alpine
+    container_name: esg_db
+    environment:
+      POSTGRES_DB: esg_db
+      POSTGRES_USER: esg_user
+      POSTGRES_PASSWORD: esg_password_segura
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - esg_network
+    restart: always
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  esg_network:
+    driver: bridge

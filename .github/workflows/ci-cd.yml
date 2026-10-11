@@ -1,0 +1,52 @@
+name: Pipeline CI/CD - Projeto ESG
+
+on:
+  push:
+    branches: [ "main", "staging" ]
+  pull_request:
+    branches: [ "main", "staging" ]
+
+jobs:
+  # Etapa de Build e Testes
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Compilar Aplicação
+        run: mvn clean compile
+
+      - name: Executar Testes Automatizados
+        run: mvn test
+
+  # Etapa de Deploy em Staging
+  deploy-staging:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Simular Deploy em Staging
+        run: echo "Deploy efetuado com sucesso no ambiente de Staging."
+
+  # Etapa de Deploy em Produção
+  deploy-production:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Simular Deploy em Produção
+        run: echo "Deploy efetuado com sucesso no ambiente de Produção."
