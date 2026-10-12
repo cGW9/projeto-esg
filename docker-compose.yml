@@ -8,6 +8,13 @@ services:
     container_name: esg_app
     ports:
       - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/esg_db
+      - SPRING_DATASOURCE_USERNAME=esg_user
+      - SPRING_DATASOURCE_PASSWORD=esg_password_segura
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - esg_network
     restart: always
@@ -23,6 +30,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U esg_user -d esg_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - esg_network
     restart: always

@@ -15,6 +15,6 @@ public class EsgApplication {
 
     @GetMapping("/")
     public String home() {
-        return "Aplicação Cidades ESGinteligentes a rodar com sucesso!";
+        return "Aplicação Cidades ESG inteligentes está rodando com sucesso!";
     }
 }
